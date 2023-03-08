@@ -1,0 +1,9 @@
+spring.application.name: springBootLambda
+spring.profiles.default: local
+spring.cloud.config.uri: http://cloud.sa.internal
+---
+spring.config.activate.on-profile: local
+spring.config.import: configserver:http://localhost:8888
+---
+spring.config.activate.on-profile: deveucentral1
+spring.config.import: configserver:http://cloud.sa.internal

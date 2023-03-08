@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.9'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.ms'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor("org.projectlombok:lombok")
+    compileOnly "org.projectlombok:lombok"
+    implementation "com.amazonaws:aws-java-sdk-core:$amazonawsVersion"
+    implementation "com.amazonaws:aws-java-sdk-kms:$amazonawsVersion"
+    implementation "com.amazonaws:aws-java-sdk-dynamodb:$amazonawsVersion"
+    implementation "com.amazonaws:aws-lambda-java-core:1.2.2"
+    implementation "com.github.derjust:spring-data-dynamodb:5.1.0"
+    implementation "com.nimbusds:nimbus-jose-jwt:7.4"
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.springframework.cloud:spring-cloud-starter-function-web:$springCloudConfigVersion"
+    implementation "org.springframework.cloud:spring-cloud-function-adapter-aws:$springCloudConfigVersion"
+    implementation "org.springframework.cloud:spring-cloud-starter-config:$springCloudConfigVersion"
+    implementation "org.springframework.cloud:spring-cloud-starter-bootstrap:$springCloudConfigVersion"
+    implementation 'org.modelmapper:modelmapper:3.1.1'
+
+    implementation 'org.zalando:spring-cloud-config-aws-kms:5.1.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named("jar") {
+    enabled = false
+}
