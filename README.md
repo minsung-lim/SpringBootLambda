@@ -1,2 +1,1 @@
-# SpringBootLambda
-Springboot for AWS Lambda
+# SpringCloudLambda
