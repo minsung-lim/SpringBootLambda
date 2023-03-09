@@ -28,9 +28,17 @@ public class KeyEntityConverter {
     public JSONObject getJwk(KeyEntity keyEntity) {
         try {
             KeyFactory keyFactory = KeyFactory.getInstance(keyEntityAlgorithm);
-            RSAPublicKey rsaPublicKey = (RSAPublicKey) keyFactory.generatePublic(new X509EncodedKeySpec(getDecoder().decode(keyEntity.getPublicKey())));
-            RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyFactory.generatePrivate(new PKCS8EncodedKeySpec(getDecoder().decode(cryptoUtils.decrypt(keyEntity.getEncPrivateKey()))));
-            return new RSAKey.Builder(rsaPublicKey).privateKey(rsaPrivateKey).keyID(keyEntity.getId()).algorithm(JWSAlgorithm.RS256).keyUse(KeyUse.SIGNATURE).build().toPublicJWK().toJSONObject();
+            RSAPublicKey rsaPublicKey = (RSAPublicKey) keyFactory.generatePublic(
+                    new X509EncodedKeySpec(getDecoder().decode(keyEntity.getPublicKey())));
+            RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyFactory.generatePrivate(
+                    new PKCS8EncodedKeySpec(getDecoder().decode(cryptoUtils.decrypt(keyEntity.getEncPrivateKey()))));
+            return new RSAKey
+                    .Builder(rsaPublicKey)
+                    .privateKey(rsaPrivateKey)
+                    .keyID(keyEntity.getId())
+                    .algorithm(JWSAlgorithm.RS256)
+                    .keyUse(KeyUse.SIGNATURE).build()
+                    .toPublicJWK().toJSONObject();
         } catch (Exception ignore) {
         }
         return null;
