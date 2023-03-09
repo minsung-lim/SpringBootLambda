@@ -15,7 +15,8 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
+
+import static java.util.Base64.getDecoder;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Component
@@ -26,12 +27,9 @@ public class KeyEntityConverter {
 
     public JSONObject getJwk(KeyEntity keyEntity) {
         try {
-            X509EncodedKeySpec x509Certificate = new X509EncodedKeySpec(Base64.getDecoder().decode(keyEntity.getPublicKey()));
             KeyFactory keyFactory = KeyFactory.getInstance(keyEntityAlgorithm);
-            RSAPublicKey rsaPublicKey = (RSAPublicKey) keyFactory.generatePublic(x509Certificate);
-            String decryptedKey = cryptoUtils.decrypt(keyEntity.getEncPrivateKey());
-            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(decryptedKey));
-            RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyFactory.generatePrivate(pkcs8EncodedKeySpec);
+            RSAPublicKey rsaPublicKey = (RSAPublicKey) keyFactory.generatePublic(new X509EncodedKeySpec(getDecoder().decode(keyEntity.getPublicKey())));
+            RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyFactory.generatePrivate(new PKCS8EncodedKeySpec(getDecoder().decode(cryptoUtils.decrypt(keyEntity.getEncPrivateKey()))));
             return new RSAKey.Builder(rsaPublicKey).privateKey(rsaPrivateKey).keyID(keyEntity.getId()).algorithm(JWSAlgorithm.RS256).keyUse(KeyUse.SIGNATURE).build().toPublicJWK().toJSONObject();
         } catch (Exception ignore) {
         }
